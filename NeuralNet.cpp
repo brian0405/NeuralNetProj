@@ -58,7 +58,7 @@ void Neuron::feedForward(Layer &prevLayer){
     double sum = 0.0;
     //sum all of the prev layer's neurons
     for (int i = 0; i < prevLayer.size(); i++){
-        cout << prevLayer[i].getOutputVal() << ", " << prevLayer[i].m_outputWeights[m_index].weight << endl;
+        ////cout << prevLayer[i].getOutputVal() << ", " << prevLayer[i].m_outputWeights[m_index].weight << endl;
         sum += prevLayer[i].getOutputVal() * 
             prevLayer[i].m_outputWeights[m_index].weight;
     }
@@ -66,7 +66,7 @@ void Neuron::feedForward(Layer &prevLayer){
     //transfer function
     m_outputVal = Neuron::transferFunction(sum);
 
-    cout << "Forward prop Neuron:" << m_index << ", sum: " << m_outputVal  << endl;
+    ////cout << "Forward prop Neuron:" << m_index << ", sum: " << m_outputVal  << endl;
 }
 double Neuron::transferFunction(double x){
     //tanh [-1,1]
@@ -101,10 +101,10 @@ void Neuron::updateInputWeights(Layer &prevLayer){
             + (alpha
             * oldDeltaWeight);
 
-        cout << "   START" << endl;
-        cout << "   " << i << ": Delta = " << neuron.m_outputWeights[m_index].deltaweight << endl;
-        cout << "   " << i << ": Weight = " << neuron.m_outputWeights[m_index].weight << endl;
-        cout << "   END" << endl;
+        ////cout << "   START" << endl;
+        ////cout << "   " << i << ": Delta = " << neuron.m_outputWeights[m_index].deltaweight << endl;
+        ////cout << "   " << i << ": Weight = " << neuron.m_outputWeights[m_index].weight << endl;
+        ////cout << "   END" << endl;
         
         neuron.m_outputWeights[m_index].deltaweight = newDeltaWeight;
         neuron.m_outputWeights[m_index].weight += newDeltaWeight;
@@ -152,7 +152,7 @@ void Net::feedForward(vector<double> &inputVals){
     for (unsigned i = 1; i < m_layers.size(); i++){
         Layer &prevLayer =  m_layers[i-1];
         for (unsigned j = 0; j < m_layers[i].size() -1 ; j++){
-            cout << "Forward prop layer:" << i  << endl;
+            ////cout << "Forward prop layer:" << i  << endl;
             m_layers[i][j].feedForward(prevLayer);
         }
     }
@@ -190,9 +190,9 @@ void Net::backProp(vector<double> &targetVals){
     for (unsigned i = m_layers.size()-1; i > 0; i--){
         Layer &layer = m_layers[i];
         Layer &prevLayer = m_layers[i-1];
-        cout << "update layer: " << i << endl;
+        ////cout << "update layer: " << i << endl;
         for (unsigned j = 0; j < layer.size()-1; j++){
-            cout << " update neuron :" << j << endl;
+            ////cout << " update neuron :" << j << endl;
             layer[j].updateInputWeights(prevLayer);
         }
     }
@@ -225,18 +225,57 @@ int main(){
     inputVals.push_back(1);
     inputVals.push_back(0);
 
+    vector<double> inputVals2;
+    inputVals2.push_back(0);
+    inputVals2.push_back(1);
+
+    vector<double> inputVals3;
+    inputVals3.push_back(1);
+    inputVals3.push_back(1);
+
+    vector<double> inputVals4;
+    inputVals4.push_back(0);
+    inputVals4.push_back(0);
+
+
     vector<double> targetVals;
-    targetVals.push_back(1);
+    targetVals.push_back(1);    
+    vector<double> targetVals2;
+    targetVals2.push_back(1);    
+    vector<double> targetVals3;
+    targetVals3.push_back(0);    
+    vector<double> targetVals4;
+    targetVals4.push_back(0);
 
 
-    for (int i = 0; i < 100; i++){
+    for (int i = 0; i < 10000; i++){
+        cout << "iteration" <<  i << endl;
         myNet.feedForward(inputVals);
         myNet.backProp(targetVals);
+
+        myNet.feedForward(inputVals2);
+        myNet.backProp(targetVals2);
+
+        myNet.feedForward(inputVals3);
+        myNet.backProp(targetVals3);
+
+        myNet.feedForward(inputVals4);
+        myNet.backProp(targetVals4);
     }
+ 
+
+
+
     myNet.feedForward(inputVals);
     myNet.getResults();
+    myNet.feedForward(inputVals2);
+    myNet.getResults();
+    myNet.feedForward(inputVals3);
+    myNet.getResults();
+    myNet.feedForward(inputVals4);
+    myNet.getResults();
 
-    cout << "HI" << endl;
+
 
 
     return 1;
